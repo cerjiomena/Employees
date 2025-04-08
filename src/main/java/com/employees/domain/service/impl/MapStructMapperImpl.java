@@ -46,7 +46,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		
 		employeeDTO.setId(employee.getId());
 		employeeDTO.setApellidoMaterno(employee.getApellidoMaterno());
-		
+		employeeDTO.setEdad(employee.getEdad());
 		
 		return employeeDTO;
 	}
@@ -83,6 +83,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		
 		employee.setId(employeeDTO.getId());
 		employee.setApellidoMaterno(employeeDTO.getApellidoMaterno());
+		employee.setEdad(employeeDTO.getEdad());
 		
 		
 		return employee;

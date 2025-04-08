@@ -62,7 +62,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		
 	}
 	
-
+	/**
+	 * @see EmployeeService#getEmployeeById(Integer)
+	 */
 	public EmployeeDTO getEmployeeById(Integer id) throws AppException {
 	    Optional<Employee> employee = employeeRepository.findById(id);
 	    
@@ -73,7 +75,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	    return mapStructMapper.employeeToEmployeeDto(employee.get());
 	}
 
-	@Override
+	/**
+	 * @see EmployeeService#addUsers(List)
+	 */
 	public List<EmployeeDTO> addUsers(List<EmployeeDTO> employeesDTO) throws AppException {
 	    try {
 	        List<Employee> employees = mapStructMapper.employeesDTosToEmployees(employeesDTO);
@@ -90,7 +94,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	    }
 	}
 
-	@Override
+	/**
+	 * @see EmployeeService#updateUser(EmployeeDTO)
+	 */
 	public EmployeeDTO updateUser(EmployeeDTO employeeDTO) throws AppException {
 		 Optional<Employee> employeeOptional = employeeRepository.findById(employeeDTO.getId());
 		    
@@ -107,6 +113,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		 employeeObtained.setSegundoNombre(employeeDTO.getSegundoNombre());
 		 employeeObtained.setPuesto(employeeDTO.getPuesto());
 		 employeeObtained.setSexo(employeeDTO.getSexo());
+		 employeeObtained.setEdad(employeeDTO.getEdad());
 		 
 		Employee updatedEmployee = employeeRepository.save(employeeObtained);
 		 

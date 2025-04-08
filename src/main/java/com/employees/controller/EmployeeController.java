@@ -21,6 +21,13 @@ import com.employees.dto.EmployeeDTO;
 import com.employees.error.AppException;
 import com.employees.util.Constants;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -30,6 +37,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(path = "/api/v1")
 @Slf4j
+@Tag(name = "Employees", description = "API to manage the info of employees")
 public class EmployeeController {
 	
 	@Autowired
@@ -38,7 +46,17 @@ public class EmployeeController {
 	@Autowired
 	private MessageSource messageSource;
 	
+	@Operation(summary = "Get the list of employees", 
+            description = "Return all the list of employees")
+	 @ApiResponses({
+	     @ApiResponse(responseCode = "200", description = "The list retrived successfully"),
+	     @ApiResponse(responseCode = "500", description = "Internal server error")
+	 })
 	@GetMapping(value = "/employees", produces = MediaType.APPLICATION_JSON_VALUE)
+	/**
+	 * Method of controller to get the list of employees
+	 * @return ResponseEntity
+	 */
 	public ResponseEntity<Map<String, Object>> getListEmployees() {
 		if (log.isDebugEnabled())
 			log.debug(">> Enter to EmployeeController.getListEmployees << ");
@@ -54,7 +72,18 @@ public class EmployeeController {
 	
 	}
 	
+	@Operation(summary = "Delete the user by id", 
+            description = "Remove the user from the system")
+	 @ApiResponses({
+	     @ApiResponse(responseCode = "200", description = "Employee deleted successfully"),
+	     @ApiResponse(responseCode = "500", description = "Internal server error")
+	 })
 	@DeleteMapping(value = "/employee/{id}")
+	/**
+	 * Method of controller to delete user by id
+	 * @param id Identity of Employee
+	 * @return ResponseEntity
+	 */
 	public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
 	    if (log.isDebugEnabled())
 	        log.debug(">> Enter to EmployeeController.deleteUser <<");
@@ -76,7 +105,19 @@ public class EmployeeController {
 	    }
 	}
 	
+
+	@Operation(summary = "Update the employee by the information", 
+            description = "Update employee with the info given")
+	 @ApiResponses({
+	     @ApiResponse(responseCode = "200", description = "Employee updated successfully"),
+	     @ApiResponse(responseCode = "500", description = "Internal server error")
+	 })
 	@PutMapping(value = "/employee")
+	/**
+	 * Method of controller to update an Employee
+	 * @param employeeDTO Class of Transport with the info
+	 * @return ResponseEntity
+	 */
 	public ResponseEntity<?> updateUser(@RequestBody EmployeeDTO employeeDTO) {
 		 if (log.isDebugEnabled())
 		        log.debug(">> Enter to EmployeeController.updateUser <<");
@@ -106,7 +147,28 @@ public class EmployeeController {
 		
 	}
 	
+	@Operation(
+		    summary = "Add the employee(s) with the information",
+		    description = "Add employee(s) with info given",
+		    requestBody =@io.swagger.v3.oas.annotations.parameters.RequestBody(
+		        content = @Content(
+		            mediaType = "application/json",
+		            array = @ArraySchema(
+		                schema = @Schema(ref = "#/components/schemas/EmployeeCreation")
+		            )
+		        )
+		    )
+		)
+	 @ApiResponses({
+	     @ApiResponse(responseCode = "200", description = "Employee added successfully"),
+	     @ApiResponse(responseCode = "500", description = "Internal server error")
+	 })
 	@PostMapping(value = "/employee")
+	/**
+	 * Method of the controller to add user(s)
+	 * @param employees List of employees
+	 * @return ResponseEnity
+	 */
 	public ResponseEntity<?> addUsers(@RequestBody List<EmployeeDTO> employees) {
 		if (log.isDebugEnabled())
 	        log.debug(">> Enter to EmployeeController.addUsers <<");
@@ -137,6 +199,11 @@ public class EmployeeController {
 		
 	}
 	
+	/**
+	 * Method helper to manage the exception of the logic os the services
+	 * @param e AppException with the code error and message
+	 * @return ResponseEntity
+	 */
 	private ResponseEntity<?> handleAppException(AppException e) {
 	    Map<String, Object> response = new HashMap<>();
 	    HttpHeaders responseHeaders = new HttpHeaders();

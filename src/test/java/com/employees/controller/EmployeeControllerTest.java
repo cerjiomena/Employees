@@ -48,6 +48,10 @@ class EmployeeControllerTest {
 	private List<EmployeeDTO> addedEmployeesDTOs = null;
 	
 	@BeforeEach
+	/**
+	 * Method to init each enviroment of tests
+	 * @throws AppException
+	 */
 	void setUp() throws AppException {
 		log.debug("Executing config before each test");
 		EmployeeDTO employeeDTO =new EmployeeDTO();
@@ -66,6 +70,9 @@ class EmployeeControllerTest {
 	
 	
 	@AfterEach
+	/**
+	 * Method using when each test is finished
+	 */
 	void tearDown() {
 		log.debug("Executing tearDown ");
 		
@@ -93,6 +100,10 @@ class EmployeeControllerTest {
 	}
 
 	@Test
+	/**
+	 * Method to test le list of employees
+	 * @throws Exception
+	 */
 	void testGetEmployees() throws Exception {
 		log.debug("Enter to EmployeeControllerTest.testGetEmployees");
 		MvcResult result =  mockMvc.perform(get("/api/v1/employees")).andExpect(status().isOk()).andReturn();
@@ -109,6 +120,10 @@ class EmployeeControllerTest {
 	}
 	
 	@Test
+	/**
+	 * Method to delete the user by id
+	 * @throws Exception
+	 */
 	void testDeleteUser() throws Exception {
 		log.debug("Enter to EmployeeControllerTest.testDeleteUser");
 		EmployeeDTO employeeDTO =  this.addedEmployeesDTOs.get(0);
@@ -135,6 +150,10 @@ class EmployeeControllerTest {
 	}
 	
 	@Test
+	/**
+	 * Method to test the update of the user
+	 * @throws Exception
+	 */
 	void testUpdateUser() throws Exception {
 	    log.debug("Enter to EmployeeControllerTest.testUpdateUser");
 	    
@@ -168,14 +187,17 @@ class EmployeeControllerTest {
 	    // Verificar que la actualización fue exitosa
 	    assertEquals(Constants.SUCCESS, jsonResponse.getInt("status"), "El status debe ser SUCCESS");
 	    
-	    // Verificar que el mensaje es el esperado
-	    String expectedMessage = "Employee updated successfully"; 
+	    // Verificar que el mensaje es el esperado 
 	    assertTrue(jsonResponse.getString("message").contains("success"), 
 	            "El mensaje debe indicar actualización exitosa");
 
 	}
 	
 	@Test
+	/**
+	 * Method to test add user(s)
+	 * @throws Exception
+	 */
 	void testAddUsers() throws Exception {
 	    log.debug("Enter to EmployeeControllerTest.testAddUsers");
 

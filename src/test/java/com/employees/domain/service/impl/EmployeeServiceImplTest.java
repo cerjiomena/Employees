@@ -30,6 +30,10 @@ class EmployeeServiceImplTest {
 	private List<EmployeeDTO> addedEmployeesDTOs = null;
 	
 	@BeforeEach
+	/**
+	 * Method to prepare each test enviroment
+	 * @throws AppException
+	 */
 	void setUp() throws AppException {
 		log.debug("Executing config before each test");
 		EmployeeDTO employeeDTO =new EmployeeDTO();
@@ -47,6 +51,9 @@ class EmployeeServiceImplTest {
 	}
 	
 	@AfterEach
+	/**
+	 * Method used to clean each test
+	 */
 	void tearDown() {
 		log.debug("Executing tearDown ");
 		
@@ -75,6 +82,9 @@ class EmployeeServiceImplTest {
 	}
 
 	@Test
+	/**
+	 * Method to test the list of employees
+	 */
 	void testGetEmployees() {
 		
 		log.debug("Enter to EmployeeServiceImplTest.testGetListEmployees");
@@ -85,6 +95,10 @@ class EmployeeServiceImplTest {
 	}
 	
 	@Test
+	/**
+	 * Method used to test the delete employee by id
+	 * @throws AppException
+	 */
 	void testDeleteEmployeeById() throws AppException {
 	    log.debug("Enter to EmployeeServiceImplTest.testDeleteEmployeeById");
 
@@ -108,6 +122,10 @@ class EmployeeServiceImplTest {
 	}
 	
 	@Test
+	/**
+	 * Method used to test the add of employee(s)
+	 * @throws AppException
+	 */
 	void testAddUsers() throws AppException {
 	    log.debug("Entrando a EmployeeServiceImplTest.testAddUsers");
 
@@ -156,6 +174,10 @@ class EmployeeServiceImplTest {
 	}
 	
 	@Test
+	/**
+	 * Method used to test the update of the employee
+	 * @throws AppException
+	 */
 	public void testUpdateUser() throws AppException {
 		log.debug("Enter to EmployeeServiceImplTest.testUpdateUser");
 		
