@@ -44,7 +44,9 @@ public class MapStructMapperImpl implements MapStructMapper {
 		
 		employeeDTO = new EmployeeDTO();
 		
+		employeeDTO.setId(employee.getId());
 		employeeDTO.setApellidoMaterno(employee.getApellidoMaterno());
+		
 		
 		return employeeDTO;
 	}
