@@ -1,0 +1,113 @@
+{
+	"info": {
+		"_postman_id": "0044042e-84d1-4021-b5b4-27a44c6e7547",
+		"name": "Scenarios Employees",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43574956"
+	},
+	"item": [
+		{
+			"name": "Get List of Employees",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/employees",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User by ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/employee/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"employee",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Update User",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 3,\r\n  \"primerNombre\": \"string\",\r\n  \"segundoNombre\": \"string\",\r\n  \"apellidoPaterno\": \"string\",\r\n  \"apellidoMaterno\": \"string\",\r\n  \"sexo\": \"string\",\r\n  \"fechaNacimiento\": \"2025-04-08T16:26:48.925Z\",\r\n  \"puesto\": \"string\",\r\n  \"edad\": 35\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/employee",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"employee"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Add User(s)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n  {\r\n    \"primerNombre\": \"string\",\r\n    \"segundoNombre\": \"string\",\r\n    \"apellidoPaterno\": \"string\",\r\n    \"apellidoMaterno\": \"string\",\r\n    \"sexo\": \"string\",\r\n    \"fechaNacimiento\": \"2025-04-08T16:25:24.006Z\",\r\n    \"puesto\": \"string\",\r\n    \"edad\": 19\r\n  }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/employee",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"employee"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
