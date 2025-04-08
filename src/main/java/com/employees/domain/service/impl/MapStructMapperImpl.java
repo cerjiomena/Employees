@@ -51,4 +51,41 @@ public class MapStructMapperImpl implements MapStructMapper {
 		return employeeDTO;
 	}
 
+	@Override
+	public List<Employee> employeesDTosToEmployees(List<EmployeeDTO> employeesDtos) {
+		List<Employee> list = null;
+		
+		if(employeesDtos == null) {
+			return list;
+		}
+		
+		list = new ArrayList<Employee>(employeesDtos.size());
+		
+		for (EmployeeDTO employeeDTO: employeesDtos) {
+			
+			list.add(employeeDtoToEmployee(employeeDTO));
+			
+		}
+		
+		return list;
+	}
+	@Override
+	public Employee employeeDtoToEmployee(EmployeeDTO employeeDTO) {
+		
+		Employee employee = null;
+		
+		if(employeeDTO == null) {
+			return employee;
+		}
+		
+		
+		employee = new Employee();
+		
+		employee.setId(employeeDTO.getId());
+		employee.setApellidoMaterno(employeeDTO.getApellidoMaterno());
+		
+		
+		return employee;
+	}
+
 }

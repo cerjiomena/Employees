@@ -1,5 +1,6 @@
 package com.employees.domain.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +64,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 	    }
 	    
 	    return mapStructMapper.employeeToEmployeeDto(employee.get());
+	}
+
+	@Override
+	public List<EmployeeDTO> addUsers(List<EmployeeDTO> employeesDTO) {
+		
+		List<Employee> employees = mapStructMapper.employeesDTosToEmployees(employeesDTO);
+		List<Employee> newEmployees = (List<Employee>) employeeRepository.saveAll(employees);
+		
+		
+		return mapStructMapper.employeesToEmployeesDtos(newEmployees);
 	}
 	
 

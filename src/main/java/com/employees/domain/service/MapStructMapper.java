@@ -18,5 +18,9 @@ public interface MapStructMapper {
 	List<EmployeeDTO> employeesToEmployeesDtos(List<Employee> employees);
 	
 	EmployeeDTO employeeToEmployeeDto(Employee employee);
+	
+	List<Employee> employeesDTosToEmployees(List<EmployeeDTO> employeesDtos);
+
+	Employee employeeDtoToEmployee(EmployeeDTO employeeDTO);
 
 }

@@ -12,5 +12,7 @@ public interface EmployeeService {
 	void deleteEmployeeById(Integer id) throws AppException;
 	
 	EmployeeDTO getEmployeeById(Integer id) throws AppException;
+	
+	List<EmployeeDTO> addUsers(List<EmployeeDTO> employees);
 
 }
