@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.employees.domain.model.Employee;
@@ -72,13 +74,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public List<EmployeeDTO> addUsers(List<EmployeeDTO> employeesDTO) {
-		
-		List<Employee> employees = mapStructMapper.employeesDTosToEmployees(employeesDTO);
-		List<Employee> newEmployees = (List<Employee>) employeeRepository.saveAll(employees);
-		
-		
-		return mapStructMapper.employeesToEmployeesDtos(newEmployees);
+	public List<EmployeeDTO> addUsers(List<EmployeeDTO> employeesDTO) throws AppException {
+	    try {
+	        List<Employee> employees = mapStructMapper.employeesDTosToEmployees(employeesDTO);
+	        List<Employee> newEmployees = (List<Employee>) employeeRepository.saveAll(employees);
+	        return mapStructMapper.employeesToEmployeesDtos(newEmployees);
+	    } catch (DataIntegrityViolationException e) {
+	        // Manejar violaciones de integridad (duplicados, restricciones, etc.)
+	        log.error("Error de integridad de datos al guardar empleados: {}", e.getMessage());
+	        throw new AppException("Error on save data employees: violation of data integrity", MessageError.ERROR_DATA_INTEGRITY);
+	    } catch (DataAccessException e) {
+	        // Manejar otros errores de acceso a datos
+	        log.error("Error de acceso a datos al guardar empleados: {}", e.getMessage());
+	        throw new AppException("Error on save data employees: problems with access data", MessageError.ERROR_DATA_ACCESS);
+	    }
 	}
 
 	@Override

@@ -21,25 +21,26 @@ public interface EmployeeService {
 	void deleteEmployeeById(Integer id) throws AppException;
 	
 	/**
-	 * Method to get de employee by id
+	 * Method to get the employee by id
 	 * @param id identifier
-	 * @return EmployeeDTO
+	 * @return EmployeeDTO  the object obtained
 	 * @throws AppException
 	 */
 	EmployeeDTO getEmployeeById(Integer id) throws AppException;
 	
 	
 	/**
-	 * 
+	 * Method to addUser an element or list of elements
 	 * @param employees
-	 * @return
+	 * @return the list of objects including the ids
+	 * @throws AppException 
 	 */
-	List<EmployeeDTO> addUsers(List<EmployeeDTO> employees);
+	List<EmployeeDTO> addUsers(List<EmployeeDTO> employees) throws AppException;
 	
 	/**
-	 * 
-	 * @param employeeDTO
-	 * @return
+	 * Method to update user
+	 * @param employeeDTO class of transport with the info
+	 * @return the same Object with the updated data
 	 * @throws AppException
 	 */
 	EmployeeDTO updateUser(EmployeeDTO employeeDTO) throws AppException;

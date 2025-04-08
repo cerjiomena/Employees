@@ -30,7 +30,7 @@ class EmployeeServiceImplTest {
 	private List<EmployeeDTO> addedEmployeesDTOs = null;
 	
 	@BeforeEach
-	void setUp() {
+	void setUp() throws AppException {
 		log.debug("Executing config before each test");
 		EmployeeDTO employeeDTO =new EmployeeDTO();
 		employeeDTO.setApellidoMaterno("Hernandez");

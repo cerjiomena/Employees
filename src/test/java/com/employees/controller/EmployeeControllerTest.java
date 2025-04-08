@@ -3,6 +3,7 @@ package com.employees.controller;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +48,7 @@ class EmployeeControllerTest {
 	private List<EmployeeDTO> addedEmployeesDTOs = null;
 	
 	@BeforeEach
-	void setUp() {
+	void setUp() throws AppException {
 		log.debug("Executing config before each test");
 		EmployeeDTO employeeDTO =new EmployeeDTO();
 		employeeDTO.setApellidoMaterno("Hernandez");
@@ -133,8 +135,8 @@ class EmployeeControllerTest {
 	}
 	
 	@Test
-	void updateUser() throws Exception {
-	    log.debug("Enter to EmployeeControllerTest.updateUser");
+	void testUpdateUser() throws Exception {
+	    log.debug("Enter to EmployeeControllerTest.testUpdateUser");
 	    
 	    // Obtener el empleado de prueba
 	    EmployeeDTO employeeDTO = this.addedEmployeesDTOs.get(0);
@@ -170,19 +172,68 @@ class EmployeeControllerTest {
 	    String expectedMessage = "Employee updated successfully"; 
 	    assertTrue(jsonResponse.getString("message").contains("success"), 
 	            "El mensaje debe indicar actualización exitosa");
-	    
-	    // Opcionalmente, verificar que los datos se actualizaron realmente
-	    // Obtener el empleado actualizado
-	    /*MvcResult getResult = mockMvc.perform(get("/api/v1/employee/" + employeeDTO.getId()))
+
+	}
+	
+	@Test
+	void testAddUsers() throws Exception {
+	    log.debug("Enter to EmployeeControllerTest.testAddUsers");
+
+	    // JSON de prueba con dos empleados
+	    String employeesJson = """
+	    [
+	      {
+	        "primerNombre": "Juan",
+	        "segundoNombre": "Carlos",
+	        "apellidoPaterno": "López",
+	        "apellidoMaterno": "García",
+	        "edad": 30,
+	        "sexo": "M",
+	        "fechaNacimiento": "1993-05-15",
+	        "puesto": "Desarrollador"
+	      },
+	      {
+	        "primerNombre": "Ana",
+	        "segundoNombre": "María",
+	        "apellidoPaterno": "Rodríguez",
+	        "apellidoMaterno": "Pérez",
+	        "edad": 28,
+	        "sexo": "F",
+	        "fechaNacimiento": "1995-08-20",
+	        "puesto": "Diseñadora"
+	      }
+	    ]
+	    """;
+
+	    // Realizar la petición POST
+	    MvcResult result = mockMvc.perform(post("/api/v1/employee")
+	            .contentType(MediaType.APPLICATION_JSON)
+	            .content(employeesJson))
 	            .andExpect(status().isOk())
+	            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 	            .andReturn();
-	    
-	    JSONObject getResponse = new JSONObject(getResult.getResponse().getContentAsString());
-	    JSONObject updatedEmployee = getResponse.getJSONObject("data");
-	    
-	    assertEquals("NombreActualizado", updatedEmployee.getString("primerNombre"), 
-	            "El primer nombre debería haberse actualizado");
-	    assertEquals("PuestoActualizado", updatedEmployee.getString("puesto"), 
-	            "El puesto debería haberse actualizado");*/
+
+	    // Verificar la respuesta
+	    MockHttpServletResponse response = result.getResponse();
+	    String content = response.getContentAsString();
+	    log.debug("Respuesta: " + content);
+
+	    // Analizar el JSON de respuesta
+	    JSONObject jsonResponse = new JSONObject(content);
+
+	    // Verificar el status
+	    assertEquals(Constants.SUCCESS, jsonResponse.getInt("status"), "El status debe ser SUCCESS");
+
+	    // Verificar el mensaje
+	    assertTrue(jsonResponse.getString("message").contains("success"), 
+	            "El mensaje debe indicar éxito en la operación");
+
+	    // Verificar que se devolvieron los empleados añadidos
+	    JSONArray addedEmployees = jsonResponse.getJSONArray("employees"); // o "employees" según tu implementación
+	    assertEquals(2, addedEmployees.length(), "Se deberían haber añadido 2 empleados");
+
+	    // Verificar que los empleados tienen IDs asignados
+	    assertTrue(addedEmployees.getJSONObject(0).has("id"), "El primer empleado debe tener un ID asignado");
+	    assertTrue(addedEmployees.getJSONObject(1).has("id"), "El segundo empleado debe tener un ID asignado");
 	}
 }

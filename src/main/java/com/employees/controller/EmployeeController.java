@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -96,12 +97,43 @@ public class EmployeeController {
 		     response.put(Constants.MESSAGE, successMessage);
 		     response.put(Constants.EMPLOYEE, updatedEmployee);
 		        
-		     return new ResponseEntity<>(response, HttpStatus.OK);			 
+		     return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);		 
 			 
 		 } catch(AppException e) {
 			return handleAppException(e);
 		 }
 		    
+		
+	}
+	
+	@PostMapping(value = "/employee")
+	public ResponseEntity<?> addUsers(@RequestBody List<EmployeeDTO> employees) {
+		if (log.isDebugEnabled())
+	        log.debug(">> Enter to EmployeeController.addUsers <<");
+		Map<String, Object> response = new HashMap<>();
+		HttpHeaders responseHeaders = new HttpHeaders();
+		
+		try {
+			
+			List<EmployeeDTO>  addedEmployees = employeeService.addUsers(employees);
+			
+			// Obtener el mensaje de exito del archivo de propiedades
+		    String successMessage = messageSource.getMessage("user.add.sucess", null, LocaleContextHolder.getLocale());
+		    
+		     // Agregar mensaje tanto en los headers como en el cuerpo
+		     responseHeaders.set(Constants.MESSAGE, successMessage);
+		     response.put(Constants.STATUS, Constants.SUCCESS);
+		     response.put(Constants.MESSAGE, successMessage);
+		     response.put(Constants.EMPLOYEES, addedEmployees);
+		        
+		     return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
+		    
+			
+			
+		} catch(AppException e) {
+			return handleAppException(e);
+		}
+		
 		
 	}
 	
