@@ -1,4 +1,4 @@
-package com.employees.domain.model;
+package com.employees.domain.service.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,25 +9,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.employees.EmployeesApplication;
-import com.employees.domain.repository.EmployeeRepository;
+import com.employees.domain.service.EmployeeService;
+import com.employees.dto.EmployeeDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest(classes = {EmployeesApplication.class})
 @Slf4j
-class EmployeeTest {
+class EmployeeServiceImplTest {
 	
 	@Autowired
-	private EmployeeRepository employeeRepository;
-	
+	private EmployeeService employeeService;
+
 	@Test
-	public void testGetListEmployees() {
-		log.debug("Entrando a testGetListEmployees");
+	void testGetEmployees() {
 		
-		List<Employee> employees = (List<Employee>) employeeRepository.findAll();
+		log.debug("Entrando a EmployeeServiceImplTest.testGetListEmployees");
+		
+		List<EmployeeDTO> employees = employeeService.getEmployees();
 		
 		assertTrue(employees.size()>0);
-		
 	}
 
 }
