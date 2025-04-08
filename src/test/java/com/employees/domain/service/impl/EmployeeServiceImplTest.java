@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +26,53 @@ class EmployeeServiceImplTest {
 	
 	@Autowired
 	private EmployeeService employeeService;
+	
+	private List<EmployeeDTO> addedEmployeesDTOs = null;
+	
+	@BeforeEach
+	void setUp() {
+		log.debug("Executing config before each test");
+		EmployeeDTO employeeDTO =new EmployeeDTO();
+		employeeDTO.setApellidoMaterno("Hernandez");
+		employeeDTO.setApellidoPaterno("Hernandez");
+		employeeDTO.setFechaNacimiento(new Date());
+		employeeDTO.setPrimerNombre("Luis");
+		employeeDTO.setSegundoNombre("Angel");
+		employeeDTO.setPuesto("Contador");
+		employeeDTO.setSexo("Masculino");
+		List<EmployeeDTO> employeesToAdd = new ArrayList<>();
+	    employeesToAdd.add(employeeDTO);
+	    this.addedEmployeesDTOs = employeeService.addUsers(employeesToAdd);
+		
+	}
+	
+	@AfterEach
+	void tearDown() {
+		log.debug("Executing tearDown ");
+		
+		try {
+			
+			if(this.addedEmployeesDTOs != null && !this.addedEmployeesDTOs.isEmpty()) {
+				EmployeeDTO employeeDTO = this.addedEmployeesDTOs.get(0);
+				
+				try {
+					
+					employeeService.getEmployeeById(employeeDTO.getId());
+					
+					employeeService.deleteEmployeeById(employeeDTO.getId());
+					
+				} catch(AppException e) {
+					log.debug("The employee was removed");
+				}
+			}
+			
+		} catch (Exception e) {
+			log.error("Error inside tearDown");
+			
+		}
+		
+		
+	}
 
 	@Test
 	void testGetEmployees() {
@@ -40,16 +89,16 @@ class EmployeeServiceImplTest {
 	    log.debug("Enter to EmployeeServiceImplTest.testDeleteEmployeeById");
 
 	    // be sure that the employee exists
-	    EmployeeDTO employee = employeeService.getEmployeeById(Integer.valueOf(1));
-	    assertNotNull(employee, "El empleado debería existir antes de la eliminación");
+	    EmployeeDTO employeeDTO =  this.addedEmployeesDTOs.get(0);
+	    assertNotNull(employeeDTO, "El empleado debería existir antes de la eliminación");
 
 	    // Delete employee
-	    employeeService.deleteEmployeeById(Integer.valueOf(1));
+	    employeeService.deleteEmployeeById(employeeDTO.getId());
 
 	    // Verify the exception
 	    AppException exception = assertThrows(
 	        AppException.class,
-	        () -> employeeService.getEmployeeById(Integer.valueOf(1)),
+	        () -> employeeService.getEmployeeById(employeeDTO.getId()),
 	        "Se debería lanzar AppException al buscar un empleado eliminado"
 	    );
 
@@ -104,6 +153,22 @@ class EmployeeServiceImplTest {
 	    EmployeeDTO retrievedEmp1 = employeeService.getEmployeeById(addedEmployees.get(0).getId());
 	    assertNotNull(retrievedEmp1, "El primer empleado debería poder recuperarse por ID");
 	    assertEquals("Juan", retrievedEmp1.getPrimerNombre(), "El nombre del primer empleado debería ser Juan");
+	}
+	
+	@Test
+	public void testUpdateUser() throws AppException {
+		log.debug("Enter to EmployeeServiceImplTest.testUpdateUser");
+		
+		EmployeeDTO employeeDTO = this.addedEmployeesDTOs.get(0);
+		String valor_a_cambiar_puesto = "Contador en jefe";
+		employeeDTO.setPuesto(valor_a_cambiar_puesto);
+
+		EmployeeDTO updatedEmployeeDTO =  employeeService.updateUser(employeeDTO);
+		
+		assertEquals(valor_a_cambiar_puesto, updatedEmployeeDTO.getPuesto());
+		
+		
+		
 	}
 
 }

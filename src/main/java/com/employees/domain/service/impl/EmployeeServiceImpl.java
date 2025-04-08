@@ -29,7 +29,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Qualifier("mainMapperImpl")
 	private MapStructMapper mapStructMapper;
 
-	@Override
+	
+	/**
+	 * @see EmployeeService#getEmployees()
+	 */
 	public List<EmployeeDTO> getEmployees() {
 		
 		if(log.isDebugEnabled())
@@ -42,7 +45,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return mapStructMapper.employeesToEmployeesDtos(employees);
 	}
 
-	@Override
+	/**
+	 * @see EmployeeService#deleteEmployeeById(Integer)
+	 */
 	public void deleteEmployeeById(Integer id) throws AppException {
 		
 		if (!employeeRepository.existsById(id)) {
@@ -74,6 +79,30 @@ public class EmployeeServiceImpl implements EmployeeService {
 		
 		
 		return mapStructMapper.employeesToEmployeesDtos(newEmployees);
+	}
+
+	@Override
+	public EmployeeDTO updateUser(EmployeeDTO employeeDTO) throws AppException {
+		 Optional<Employee> employeeOptional = employeeRepository.findById(employeeDTO.getId());
+		    
+		 if (!employeeOptional.isPresent()) {
+		        throw new AppException(MessageError.ERROR_EMPLOYEE_DOES_NOT_EXIST);
+		 }
+		 
+		 
+		 Employee employeeObtained = employeeOptional.get();
+		 employeeObtained.setApellidoMaterno(employeeDTO.getApellidoMaterno());
+		 employeeObtained.setApellidoPaterno(employeeDTO.getApellidoPaterno());
+		 employeeObtained.setFechaNacimiento(employeeDTO.getFechaNacimiento());
+		 employeeObtained.setPrimerNombre(employeeDTO.getPrimerNombre());
+		 employeeObtained.setSegundoNombre(employeeDTO.getSegundoNombre());
+		 employeeObtained.setPuesto(employeeDTO.getPuesto());
+		 employeeObtained.setSexo(employeeDTO.getSexo());
+		 
+		Employee updatedEmployee = employeeRepository.save(employeeObtained);
+		 
+		    
+		return mapStructMapper.employeeToEmployeeDto(updatedEmployee);
 	}
 	
 
