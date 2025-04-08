@@ -13,7 +13,7 @@ Proyecto que utiliza Spring Boot 3.4.4 para el manejo de empleados en conjunto c
 ## Tecnología utilizada
 
 - JavaSE 17
-- Maven 
+- Maven 3.9.9
 
 
 ## Estructura del Proyecto
