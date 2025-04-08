@@ -21,4 +21,5 @@ public class Constants {
     public static final String SLASH = "/";
     public static final String EMPLOYEES = "employees";
 	public static final int SUCCESS = 200;
+	 public static final String EMPLOYEE = "employee";
 }

@@ -3,6 +3,8 @@ package com.employees.controller;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -25,6 +28,7 @@ import com.employees.domain.service.EmployeeService;
 import com.employees.dto.EmployeeDTO;
 import com.employees.error.AppException;
 import com.employees.util.Constants;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -129,10 +133,56 @@ class EmployeeControllerTest {
 	}
 	
 	@Test
-	void updateUser() {
-		log.debug("Enter to EmployeeControllerTest.updateUser");
-		EmployeeDTO employeeDTO =  this.addedEmployeesDTOs.get(0);
-		
+	void updateUser() throws Exception {
+	    log.debug("Enter to EmployeeControllerTest.updateUser");
+	    
+	    // Obtener el empleado de prueba
+	    EmployeeDTO employeeDTO = this.addedEmployeesDTOs.get(0);
+	    
+	    // Modificar algunos datos del empleado
+	    employeeDTO.setPrimerNombre("NombreActualizado");
+	    employeeDTO.setPuesto("PuestoActualizado");
+	    
+	    // Convertir el objeto a JSON usando una biblioteca adecuada (Jackson, Gson, etc.)
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    String employeeJson = objectMapper.writeValueAsString(employeeDTO);
+	    
+	    // Ejecutar la solicitud PUT con el JSON del empleado actualizado
+	    MvcResult result = mockMvc.perform(put("/api/v1/employee")
+	            .contentType(MediaType.APPLICATION_JSON)
+	            .content(employeeJson))
+	            .andExpect(status().isOk())
+	            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+	            .andReturn();
+	    
+	    // Verificar la respuesta
+	    MockHttpServletResponse response = result.getResponse();
+	    String content = response.getContentAsString();
+	    log.debug("Respuesta: " + content);
+	    
+	    // Analizar el JSON de respuesta
+	    JSONObject jsonResponse = new JSONObject(content);
+	    
+	    // Verificar que la actualización fue exitosa
+	    assertEquals(Constants.SUCCESS, jsonResponse.getInt("status"), "El status debe ser SUCCESS");
+	    
+	    // Verificar que el mensaje es el esperado
+	    String expectedMessage = "Employee updated successfully"; 
+	    assertTrue(jsonResponse.getString("message").contains("success"), 
+	            "El mensaje debe indicar actualización exitosa");
+	    
+	    // Opcionalmente, verificar que los datos se actualizaron realmente
+	    // Obtener el empleado actualizado
+	    /*MvcResult getResult = mockMvc.perform(get("/api/v1/employee/" + employeeDTO.getId()))
+	            .andExpect(status().isOk())
+	            .andReturn();
+	    
+	    JSONObject getResponse = new JSONObject(getResult.getResponse().getContentAsString());
+	    JSONObject updatedEmployee = getResponse.getJSONObject("data");
+	    
+	    assertEquals("NombreActualizado", updatedEmployee.getString("primerNombre"), 
+	            "El primer nombre debería haberse actualizado");
+	    assertEquals("PuestoActualizado", updatedEmployee.getString("puesto"), 
+	            "El puesto debería haberse actualizado");*/
 	}
-
 }
